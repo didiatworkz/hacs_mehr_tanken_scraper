@@ -53,10 +53,10 @@ async def async_setup_platform(
 
 
 class MehrTankenSensor(Entity):
-    """Representation of a Neste.lv sensor."""
+    """Representation of a mehr-tanken sensor."""
 
-    def __init__(self, session, name, index):
-        """Initialize a Neste.lv sensor."""
+    def __init__(self, session, name, url, index, typ, location):
+        """Initialize a mehr-tanken sensor."""
         self._name = name
         self._url = url
         self._index = index
