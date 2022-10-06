@@ -19,6 +19,14 @@ _LOGGER = logging.getLogger(__name__)
 
 CONF_ATTRIBUTION = "Data provided by mehr-tanken.de"
 
+CONF_INDEX = "0"
+
+CONF_URL = ""
+
+CONF_LOCATION = ""
+
+CONF_TYPE = ""
+
 SCAN_INTERVAL = timedelta(minutes=10)
 
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
