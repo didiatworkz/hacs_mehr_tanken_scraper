@@ -1,0 +1,7 @@
+sensor:
+  - platform: mehr_tanken_scraper
+    name: ARAL Berlin
+    url: https://mehr-tanken.de/tankstelle/67aa5205/totalenergies-blockdammweg-6-10317-berlin
+    index: 3 # Super E5
+    type: "Super E5"
+    location: "Blockdammweg 6"

@@ -1,0 +1,13 @@
+{
+  "domain": "mehr_tanken_scraper",
+  "name": "mehr-tanken.de scraper",
+  "documentation": "https://github.com/didiatworkz/mehr_tanken_scraper",
+  "issue_tracker": "https://github.com/didiatworkz/mehr_tanken_scraper/issue",
+  "dependencies": [],
+  "codeowners": [
+    "@didiatworkz"
+  ],
+  "version": "0.1.0",
+  "requirements": [],
+  "iot_class": "cloud_polling"
+}

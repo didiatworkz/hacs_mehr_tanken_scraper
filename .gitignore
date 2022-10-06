@@ -1,0 +1,9 @@
+__pycache__
+*.swp
+*.swo
+.vscode/
+.mypy_cache/
+venv/
+custom_components/mehr_tanken_scraper/mehr_tanken_scraper/test/secrets.yaml
+.DS_Store
+
