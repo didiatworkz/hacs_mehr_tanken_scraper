@@ -21,11 +21,11 @@ CONF_ATTRIBUTION = "Data provided by mehr-tanken.de"
 
 CONF_INDEX = "0"
 
-CONF_URL = ""
+CONF_URL = "https://mehr-tanken.de"
 
-CONF_LOCATION = ""
+CONF_LOCATION = "Berlin"
 
-CONF_TYPE = ""
+CONF_TYPE = "Super E10"
 
 SCAN_INTERVAL = timedelta(minutes=10)
 
