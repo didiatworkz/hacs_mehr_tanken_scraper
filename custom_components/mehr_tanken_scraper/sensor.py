@@ -19,13 +19,13 @@ _LOGGER = logging.getLogger(__name__)
 
 CONF_ATTRIBUTION = "Data provided by mehr-tanken.de"
 
-CONF_INDEX = "0"
+CONF_INDEX = "index"
 
-CONF_URL = "https://mehr-tanken.de"
+CONF_URL = "url"
 
-CONF_LOCATION = "Berlin"
+CONF_LOCATION = "location"
 
-CONF_TYPE = "Super E10"
+CONF_TYPE = "type"
 
 SCAN_INTERVAL = timedelta(minutes=10)
 
