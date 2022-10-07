@@ -65,8 +65,7 @@ class MehrTankenSensor(Entity):
     @property
     def name(self):
         """Return the name of the sensor."""
-        name = self._name + '_' + self._petrol_name
-        return name
+        return self._name
 
     @property
     def unit_of_measurement(self):
@@ -77,6 +76,12 @@ class MehrTankenSensor(Entity):
     def state(self):
         """Return the state of the device."""
         return self._state
+
+    @property
+    def unique_id(self):
+        """Return the unique_id of the sensor."""
+        name = self._name + '_' + self._petrol_name
+        return name
 
     @property
     def extra_state_attributes(self):
@@ -116,7 +121,7 @@ class MehrTankenSensor(Entity):
             value = ''.join(value_raw.split()).split('(')[0]
             refresh_raw = raw_data.select(
                 ".PriceList__fuelList.Card.Card__inset.no-margin-top > a:nth-child(%s) > div > div.col-sm-7 > div.PriceList__itemSubtitle" % self._petrol_number)[0].text
-            self._last_refresh = ''.join(refresh_raw.split()).split('(')[0]
+            self._last_refresh = ' '.join(refresh_raw.split()).split('(')[0]
         except IndexError:
             _LOGGER.error("Unable to extract data from HTML")
             return
