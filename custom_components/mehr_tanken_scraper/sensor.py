@@ -56,14 +56,11 @@ class MehrTankenSensor(Entity):
         self._href = address
         self._petrol_number = petrol_number
         self._petrol_name = petrol_name
-        self._location = location
         self._state = None
         self._session = session
         self._unit_of_measurement = 'EUR/l'
         if(self._location != ''):
-            self._attrs["location"] = self._location,
-        self._attrs[ATTR_ATTRIBUTION] = CONF_ATTRIBUTION,
-        self._attrs["petrol_name"] = self._petrol_name,
+            self._location = location
 
     @property
     def name(self):
@@ -83,7 +80,10 @@ class MehrTankenSensor(Entity):
     @property
     def extra_state_attributes(self):
         """Return the device state attributes."""
-        return self._attrs
+        value = {}
+        value["petrol_name"] = self._petrol_name
+        value["location"] = self._location
+        return value
 
     async def async_update(self):
         """Get the latest data from the source and updates the state."""
