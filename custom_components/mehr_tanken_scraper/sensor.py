@@ -42,23 +42,23 @@ async def async_setup_platform(
         hass, config, async_add_entities, discovery_info=None):
     """Set up the mehr-tanken fuel prices sensor."""
     name = config.get(CONF_NAME)
-    url = config.get(CONF_URL)
+    address = config.get(CONF_URL)
     index = config.get(CONF_INDEX)
     typ = config.get(CONF_TYPE)
     location = config.get(CONF_LOCATION)
     session = async_get_clientsession(hass)
 
     async_add_entities([
-        MehrTankenSensor(session, name, url, index, typ, location)], True)
+        MehrTankenSensor(session, name, address, index, typ, location)], True)
 
 
 class MehrTankenSensor(Entity):
     """Representation of a mehr-tanken sensor."""
 
-    def __init__(self, session, name, url, index, typ, location):
+    def __init__(self, session, name, address, index, typ, location):
         """Initialize a mehr-tanken sensor."""
         self._name = name
-        self._url = url
+        self._href = address
         self._index = index
         self._typ = typ
         self._location = location
@@ -96,7 +96,7 @@ class MehrTankenSensor(Entity):
 
         try:
             with async_timeout.timeout(10, loop=self.hass.loop):
-                response = await self._session.get(self._url)
+                response = await self._session.get(self._href)
 
             _LOGGER.debug(
                 "Response from mehr-tanken.de: %s", response.status)
@@ -114,7 +114,7 @@ class MehrTankenSensor(Entity):
             value = ''.join(value_raw.split()).split('(')[0]
             refresh_raw = raw_data.select(
                 ".PriceList__fuelList.Card.Card__inset.no-margin-top > a:nth-child(%s) > div > div.col-sm-7 > div.PriceList__itemSubtitle" % self._index)[0].text
-            self._attrs['refresh'] = ''.join(refresh_raw.split()).split('(')[0]
+            self._attrs['last_refresh'] = ''.join(refresh_raw.split()).split('(')[0]
         except IndexError:
             _LOGGER.error("Unable to extract data from HTML")
             return
