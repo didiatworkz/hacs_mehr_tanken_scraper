@@ -95,6 +95,7 @@ class MehrTankenSensor(Entity):
             attrs[CONF_PETROL_NAME] = self._petrol_name
             attrs[CONF_LOCATION] = self._location
             attrs['last_refresh'] = self._last_refresh
+            attrs['gas_station'] = self._name
         return attrs
 
     async def async_update(self):
