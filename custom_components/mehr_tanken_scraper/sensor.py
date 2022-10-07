@@ -88,7 +88,7 @@ class MehrTankenSensor(Entity):
         from bs4 import BeautifulSoup
 
         try:
-            with async_timeout.timeout(10, loop=self.hass.loop):
+            with async_timeout.timeout(10):
                 response = await self._session.get(self._href)
 
             _LOGGER.debug(
