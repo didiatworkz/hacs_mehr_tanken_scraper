@@ -17,7 +17,7 @@ REQUIREMENTS = ['beautifulsoup4==4.6.3']
 
 _LOGGER = logging.getLogger(__name__)
 
-CONF_ATTRIBUTION = "Data provided by mehr-tanken.de"
+CONF_LOCATION_DEFAULT = ''
 CONF_PETROL_NAME = 'petrol_name'
 CONF_PETROL_NUMBER = 'petrol_number'
 CONF_PETROL_NUMBER_DEFAULT = 0
@@ -29,7 +29,7 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
     vol.Required(CONF_URL): cv.url,
     vol.Required(CONF_PETROL_NUMBER, default=CONF_PETROL_NUMBER_DEFAULT): cv.positive_int,
     vol.Required(CONF_PETROL_NAME): cv.string,
-    vol.Optional(CONF_LOCATION): cv.string,
+    vol.Optional(CONF_LOCATION, default=CONF_LOCATION_DEFAULT): cv.string,
 })
 
 
@@ -59,8 +59,7 @@ class MehrTankenSensor(Entity):
         self._state = None
         self._session = session
         self._unit_of_measurement = 'EUR/l'
-        if(self._location != ''):
-            self._location = location
+        self._location = location
 
     @property
     def name(self):
@@ -80,10 +79,9 @@ class MehrTankenSensor(Entity):
     @property
     def extra_state_attributes(self):
         """Return the device state attributes."""
-        value = {}
-        value["petrol_name"] = self._petrol_name
-        value["location"] = self._location
-        return value
+        attrs = {CONF_PETROL_NAME: self._petrol_name, CONF_LOCATION: self._location}
+        attrs.update(super().extra_state_attributes)
+        return attrs
 
     async def async_update(self):
         """Get the latest data from the source and updates the state."""
