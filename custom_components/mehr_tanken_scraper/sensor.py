@@ -64,8 +64,8 @@ class MehrTankenSensor(Entity):
 
     @property
     def friendly_name(self):
-        """Return the name of the sensor."""
-        return self._name
+        """Return the friendly_name of the sensor."""
+        return self._name.replace('_', ' ')
 
     @property
     def unit_of_measurement(self):
@@ -79,9 +79,9 @@ class MehrTankenSensor(Entity):
 
     @property
     def name(self):
-        """Return the unique_id of the sensor."""
+        """Return the name of the sensor."""
         name = 'mehr_tanken_' + self._name + '_' + self._petrol_name
-        return name
+        return name.replace(' ', '_')
 
     @property
     def extra_state_attributes(self):
