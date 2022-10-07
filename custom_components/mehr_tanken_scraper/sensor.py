@@ -8,7 +8,7 @@ import async_timeout
 import voluptuous as vol
 
 from homeassistant.components.sensor import PLATFORM_SCHEMA
-from homeassistant.const import ATTR_ATTRIBUTION, CONF_NAME, CONF_INDEX, CONF_URL, CONF_LOCATION, CONF_TYPE
+from homeassistant.const import ATTR_ATTRIBUTION, CONF_NAME, CONF_PETROL_NUMBER, CONF_URL, CONF_LOCATION, CONF_PETROL_NAME
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 import homeassistant.helpers.config_validation as cv
 from homeassistant.helpers.entity import Entity
@@ -18,11 +18,11 @@ REQUIREMENTS = ['beautifulsoup4==4.6.3']
 _LOGGER = logging.getLogger(__name__)
 
 CONF_ATTRIBUTION = "Data provided by mehr-tanken.de"
-CONF_INDEX = 'index'
-CONF_INDEX_DEFAULT = 0
 CONF_LOCATION = 'location'
-CONF_NAME = 'name'
-CONF_TYPE = 'petrol_name'
+CONF_NAME = 'gas_station'
+CONF_PETROL_NAME = 'petrol_name'
+CONF_PETROL_NUMBER = 'petrol_number'
+CONF_PETROL_NUMBER_DEFAULT = 0
 CONF_URL = 'url'
 
 SCAN_INTERVAL = timedelta(minutes=10)
@@ -30,8 +30,8 @@ SCAN_INTERVAL = timedelta(minutes=10)
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
     vol.Required(CONF_NAME): cv.string,
     vol.Required(CONF_URL): cv.url,
-    vol.Required(CONF_INDEX, default=CONF_INDEX_DEFAULT): cv.positive_int,
-    vol.Required(CONF_TYPE): cv.string,
+    vol.Required(CONF_PETROL_NUMBER, default=CONF_PETROL_NUMBER_DEFAULT): cv.positive_int,
+    vol.Required(CONF_PETROL_NAME): cv.string,
     vol.Optional(CONF_LOCATION): cv.string,
 })
 
@@ -41,24 +41,24 @@ async def async_setup_platform(
     """Set up the mehr-tanken fuel prices sensor."""
     name = config.get(CONF_NAME)
     address = config.get(CONF_URL)
-    index = config.get(CONF_INDEX)
-    typ = config.get(CONF_TYPE)
+    petrol_number = config.get(CONF_PETROL_NUMBER)
+    petrol_name = config.get(CONF_PETROL_NAME)
     location = config.get(CONF_LOCATION)
     session = async_get_clientsession(hass)
 
     async_add_entities([
-        MehrTankenSensor(session, name, address, index, typ, location)], True)
+        MehrTankenSensor(session, name, address, petrol_number, petrol_name, location)], True)
 
 
 class MehrTankenSensor(Entity):
     """Representation of a mehr-tanken sensor."""
 
-    def __init__(self, session, name, address, index, typ, location):
+    def __init__(self, session, name, address, petrol_number, petrol_name, location):
         """Initialize a mehr-tanken sensor."""
         self._name = name
         self._href = address
-        self._index = index
-        self._typ = typ
+        self._petrol_number = petrol_number
+        self._petrol_name = petrol_name
         self._location = location
         self._state = None
         self._session = session
@@ -66,7 +66,7 @@ class MehrTankenSensor(Entity):
         if(self._location != ''):
             self._attrs["location"] = self._location,
         self._attrs[ATTR_ATTRIBUTION] = CONF_ATTRIBUTION,
-        self._attrs["typ"] = self._typ,
+        self._attrs["petrol_name"] = self._petrol_name,
 
     @property
     def name(self):
@@ -108,10 +108,10 @@ class MehrTankenSensor(Entity):
 
         try:
             value_raw = raw_data.select(
-                ".PriceList__fuelList.Card.Card__inset.no-margin-top > a:nth-child(%s) > div > div.col-sm-3 > span" % self._index)[0].text
+                ".PriceList__fuelList.Card.Card__inset.no-margin-top > a:nth-child(%s) > div > div.col-sm-3 > span" % self._petrol_number)[0].text
             value = ''.join(value_raw.split()).split('(')[0]
             refresh_raw = raw_data.select(
-                ".PriceList__fuelList.Card.Card__inset.no-margin-top > a:nth-child(%s) > div > div.col-sm-7 > div.PriceList__itemSubtitle" % self._index)[0].text
+                ".PriceList__fuelList.Card.Card__inset.no-margin-top > a:nth-child(%s) > div > div.col-sm-7 > div.PriceList__itemSubtitle" % self._petrol_number)[0].text
             self._attrs['last_refresh'] = ''.join(refresh_raw.split()).split('(')[0]
         except IndexError:
             _LOGGER.error("Unable to extract data from HTML")
