@@ -8,7 +8,7 @@ import async_timeout
 import voluptuous as vol
 
 from homeassistant.components.sensor import PLATFORM_SCHEMA
-from homeassistant.const import ATTR_ATTRIBUTION, CONF_NAME
+from homeassistant.const import ATTR_ATTRIBUTION, CONF_NAME, CONF_INDEX, CONF_URL, CONF_LOCATION, CONF_TYPE
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 import homeassistant.helpers.config_validation as cv
 from homeassistant.helpers.entity import Entity
@@ -18,21 +18,19 @@ REQUIREMENTS = ['beautifulsoup4==4.6.3']
 _LOGGER = logging.getLogger(__name__)
 
 CONF_ATTRIBUTION = "Data provided by mehr-tanken.de"
-
-CONF_INDEX = "index"
-
-CONF_URL = "url"
-
-CONF_LOCATION = "location"
-
-CONF_TYPE = "type"
+CONF_INDEX = 'index'
+CONF_INDEX_DEFAULT = 0
+CONF_LOCATION = 'location'
+CONF_NAME = 'name'
+CONF_TYPE = 'petrol_name'
+CONF_URL = 'url'
 
 SCAN_INTERVAL = timedelta(minutes=10)
 
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
     vol.Required(CONF_NAME): cv.string,
-    vol.Required(CONF_URL): cv.string,
-    vol.Required(CONF_INDEX): cv.string,
+    vol.Required(CONF_URL): cv.url,
+    vol.Required(CONF_INDEX, default=CONF_INDEX_DEFAULT): cv.positive_int,
     vol.Required(CONF_TYPE): cv.string,
     vol.Optional(CONF_LOCATION): cv.string,
 })
