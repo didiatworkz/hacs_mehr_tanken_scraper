@@ -63,7 +63,7 @@ class MehrTankenSensor(Entity):
         self._location = location
 
     @property
-    def name(self):
+    def friendly_name(self):
         """Return the name of the sensor."""
         return self._name
 
@@ -78,9 +78,9 @@ class MehrTankenSensor(Entity):
         return self._state
 
     @property
-    def unique_id(self):
+    def name(self):
         """Return the unique_id of the sensor."""
-        name = self._name + '_' + self._petrol_name
+        name = 'mehr_tanken_' + self._name + '_' + self._petrol_name
         return name
 
     @property
