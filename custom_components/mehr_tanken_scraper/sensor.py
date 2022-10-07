@@ -57,6 +57,7 @@ class MehrTankenSensor(Entity):
         self._petrol_number = petrol_number
         self._petrol_name = petrol_name
         self._state = None
+        self._last_refresh = ''
         self._session = session
         self._unit_of_measurement = 'EUR/l'
         self._location = location
@@ -79,7 +80,7 @@ class MehrTankenSensor(Entity):
     @property
     def extra_state_attributes(self):
         """Return the device state attributes."""
-        attrs = {CONF_PETROL_NAME: self._petrol_name, CONF_LOCATION: self._location}
+        attrs = {CONF_PETROL_NAME: self._petrol_name, CONF_LOCATION: self._location, 'last_refresh': self._last_refresh}
         attrs.update(super().extra_state_attributes)
         return attrs
 
@@ -107,7 +108,7 @@ class MehrTankenSensor(Entity):
             value = ''.join(value_raw.split()).split('(')[0]
             refresh_raw = raw_data.select(
                 ".PriceList__fuelList.Card.Card__inset.no-margin-top > a:nth-child(%s) > div > div.col-sm-7 > div.PriceList__itemSubtitle" % self._petrol_number)[0].text
-            self._attrs['last_refresh'] = ''.join(refresh_raw.split()).split('(')[0]
+            self._last_refresh = ''.join(refresh_raw.split()).split('(')[0]
         except IndexError:
             _LOGGER.error("Unable to extract data from HTML")
             return
