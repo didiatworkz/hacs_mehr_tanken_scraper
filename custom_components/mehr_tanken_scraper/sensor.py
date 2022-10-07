@@ -80,8 +80,15 @@ class MehrTankenSensor(Entity):
     @property
     def extra_state_attributes(self):
         """Return the device state attributes."""
-        attrs = {CONF_PETROL_NAME: self._petrol_name, CONF_LOCATION: self._location, 'last_refresh': self._last_refresh}
-        attrs.update(super().extra_state_attributes)
+        attrs = super().extra_state_attributes
+        
+        if self._state:
+            if attrs is None:
+                attrs = {}
+
+            attrs[CONF_PETROL_NAME] = self._petrol_name
+            attrs[CONF_LOCATION] = self._location
+            attrs['last_refresh'] = self._last_refresh
         return attrs
 
     async def async_update(self):
