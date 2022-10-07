@@ -65,7 +65,8 @@ class MehrTankenSensor(Entity):
     @property
     def name(self):
         """Return the name of the sensor."""
-        return self._name
+        name = self._name + '_' + self._petrol_name
+        return name
 
     @property
     def unit_of_measurement(self):
