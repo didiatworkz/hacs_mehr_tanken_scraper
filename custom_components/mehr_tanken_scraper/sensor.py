@@ -118,10 +118,10 @@ class MehrTankenSensor(Entity):
 
         try:
             value_raw = raw_data.select(
-                ".PriceList__fuelList.Card.Card__inset.no-margin-top > a:nth-child(%s) > div > div.col-sm-3 > span" % self._petrol_number)[0].text
+                "#maincol_article > div.va-maincol.lg\:w-\[calc\(100\%-360px\)\].px-4.lg\:px-0.mb-9 > div.borer-skin-grey-medium.mb-4.border-t.border-solid > div:nth-child(%s) > div.w-\[120px\].flex.flex-col.justify-between.space-y-4 > div.relative.font-skin-primary.text-3xl.lg\:text-4xl.text-skin-primary" % self._petrol_number)[0].text
             value = ''.join(value_raw.split()).split('(')[0]
             refresh_raw = raw_data.select(
-                ".PriceList__fuelList.Card.Card__inset.no-margin-top > a:nth-child(%s) > div > div.col-sm-7 > div.PriceList__itemSubtitle" % self._petrol_number)[0].text
+                "#maincol_article > div.va-maincol.lg\:w-\[calc\(100\%-360px\)\].px-4.lg\:px-0.mb-9 > div.borer-skin-grey-medium.mb-4.border-t.border-solid > div:nth-child(%s) > div.w-\[calc\(100\%-120px\)\].flex.flex-col.justify-between.px-4 > div > p" % self._petrol_number)[0].text
             self._last_refresh = ' '.join(refresh_raw.split()).split('(')[0]
         except IndexError:
             _LOGGER.error("Unable to extract data from HTML")
