@@ -120,7 +120,8 @@ class MehrTankenSensor(Entity):
             value_raw = raw_data.select("#maincol_article > div.va-maincol.lg\:w-\[calc\(100\%-360px\)\].px-4.lg\:px-0.mb-9 > div.borer-skin-grey-medium.mb-4.border-t.border-solid > div:nth-child(" + str(self._petrol_number) + ") > div.w-\[120px\].flex.flex-col.justify-between.space-y-4 > div.relative.font-skin-primary.text-3xl.lg\:text-4xl.text-skin-primary")
             value = value_raw[0].get_text()
             refresh_raw = raw_data.select("#maincol_article > div.va-maincol.lg\:w-\[calc\(100\%-360px\)\].px-4.lg\:px-0.mb-9 > div.borer-skin-grey-medium.mb-4.border-t.border-solid > div:nth-child(" + str(self._petrol_number) + ") > div.w-\[calc\(100\%-120px\)\].flex.flex-col.justify-between.px-4 > div > p")
-            self._last_refresh = refresh_raw[0].get_text()
+            rval = refresh_raw[0].get_text().split(' ')
+            self._last_refresh = rval[0] + ' ' + rval[1] + ' ' + rval[2]
         except IndexError:
             _LOGGER.error("Unable to extract data from HTML")
             value = 0.00
