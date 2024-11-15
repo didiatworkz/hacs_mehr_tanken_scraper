@@ -1,16 +1,16 @@
 """Get data from mehr-tanken website"""
 import asyncio
-from datetime import timedelta
 import logging
+from datetime import timedelta
 
 import aiohttp
 import async_timeout
-import voluptuous as vol
-
-from homeassistant.components.sensor import PLATFORM_SCHEMA
-from homeassistant.const import ATTR_ATTRIBUTION, CONF_NAME, CONF_URL, CONF_LOCATION
-from homeassistant.helpers.aiohttp_client import async_get_clientsession
 import homeassistant.helpers.config_validation as cv
+import voluptuous as vol
+from homeassistant.components.sensor import PLATFORM_SCHEMA
+from homeassistant.const import (ATTR_ATTRIBUTION, CONF_LOCATION, CONF_NAME,
+                                 CONF_URL)
+from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.helpers.entity import Entity
 
 REQUIREMENTS = ['beautifulsoup4==4.6.3']
@@ -111,15 +111,17 @@ class MehrTankenSensor(Entity):
             data = await response.text()
             _LOGGER.debug(data)
         except (asyncio.TimeoutError, aiohttp.ClientError):
-            _LOGGER.error("Can not load data from mehr-tanken.dev")
+            _LOGGER.error("Can not load data from mehr-tanken.de")
             return
 
         raw_data = BeautifulSoup(data, 'html.parser')
 
         try:
-            value_raw = raw_data.select("#maincol_article > div.va-maincol.lg\:w-\[calc\(100\%-360px\)\].px-4.lg\:px-0.mb-9 > div.borer-skin-grey-medium.mb-4.border-t.border-solid.detailServiceStation_border__w8k48 > div:nth-child(" + str(self._petrol_number) + ") > div.flex.flex-col.justify-between.space-y-4.gasStationInfo_gas-price__ZW1gM > div.relative.font-skin-primary.text-3xl.lg\:text-4xl.text-skin-primary")
+            value_raw = raw_data.select("#maincol_article > div.va-maincol.lg\:w-maincol.px-4.lg\:px-0.mb-9 > div.borer-skin-grey-medium.mb-4.border-t.border-solid.detailServiceStation_border__w8k48 > div:nth-child(" + str(
+                self._petrol_number) + ") > div.flex.flex-col.justify-between.space-y-4.gasStationInfo_gas-price__ZW1gM > div.relative.font-skin-primary.text-3xl.text-skin-primary.lg\:text-4xl")
             value = value_raw[0].get_text()
-            refresh_raw = raw_data.select("#maincol_article > div.va-maincol.lg\:w-\[calc\(100\%-360px\)\].px-4.lg\:px-0.mb-9 > div.borer-skin-grey-medium.mb-4.border-t.border-solid.detailServiceStation_border__w8k48 > div:nth-child(" + str(self._petrol_number) + ") > div.flex.flex-col.justify-between.px-4.gasStationInfo_gas-info__5R12f > div > p")
+            refresh_raw = raw_data.select("#maincol_article > div.va-maincol.lg\:w-maincol.px-4.lg\:px-0.mb-9 > div.borer-skin-grey-medium.mb-4.border-t.border-solid.detailServiceStation_border__w8k48 > div:nth-child(" + str(
+                self._petrol_number) + ") > div.flex.flex-col.justify-between.px-4.gasStationInfo_gas-info__5R12f > div > p")
             rval = refresh_raw[0].get_text().split(' ')
             self._last_refresh = rval[0] + ' ' + rval[1] + ' ' + rval[2]
         except IndexError:
